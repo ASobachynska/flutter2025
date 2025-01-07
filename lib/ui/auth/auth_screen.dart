@@ -38,32 +38,26 @@ class _AuthScreen extends State<AuthScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Фоновое изображение
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/profiley2.png'), // Шлях до зображення
-                fit: BoxFit.cover, // Покриття всього фону
+                image: AssetImage('assets/images/profiley2.png'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          // Логотип и текст, выровненные в левый верхний угол
           Positioned(
-            top: 10, // Отступ от верха
-            left: 20, // Отступ от левого края
+            top: 10,
+            left: 20,
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Выровнивание по левому краю
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Логотип
                 Image.asset(
-                  'assets/images/logo.png', // Путь к логотипу
-                  height: 80, // Высота изображения
-                  width: 80, // Ширина изображения
+                  'assets/images/logo.png',
+                  height: 80,
+                  width: 80,
                 ),
-                const SizedBox(height: 8), // Отступ между логотипом и текстом
-                // Текст под логотипом
+                const SizedBox(height: 8),
                 const Text(
                   'Кам`янець-Подільський \nнаціональний університет \nімені Івана Огієнка',
                   style: TextStyle(
@@ -77,54 +71,47 @@ class _AuthScreen extends State<AuthScreen> {
               ],
             ),
           ),
-          // Основной контент
           Center(
             child: Transform.translate(
-              offset:
-                  const Offset(0, 5), // Смещение контента вниз после логотипа
+              offset: const Offset(0, 5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(
-                        height: 70), // Отступ между логотипом и аватаром
-                    // Аватар вместо текста "Login"
+                    const SizedBox(height: 70),
                     Container(
-                      width: 120, // Размер контейнера
+                      width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle, // Форма контейнера
+                        shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 1,
                             blurRadius: 10,
-                            offset: Offset(0, 4), // Тень снизу
+                            offset: Offset(0, 4),
                           ),
                         ],
                       ),
                       child: CircleAvatar(
-                        radius: 60, // Размер аватара
+                        radius: 60,
                         backgroundColor: Colors.white,
                         child: Icon(
-                          Icons.person, // Иконка профиля по умолчанию
+                          Icons.person,
                           size: 50,
-                          color: AppColors.primary, // Цвет иконки
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
-
-                    const SizedBox(
-                        height: 36), // Отступ между аватаром и кнопкой
-                    // Кнопка "Войти"
+                    const SizedBox(height: 36),
                     ElevatedButton(
                       onPressed: () async {
                         await widget.viewModel.loginWithGoogle();
                         if (widget.viewModel.isLoggedIn) {
                           _onLoginResult();
                         }
-                      }, // Вызов метода авторизации
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(
@@ -132,9 +119,8 @@ class _AuthScreen extends State<AuthScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        elevation: 8, // Тень для кнопки
-                        shadowColor:
-                            Colors.grey.withOpacity(0.3), // Полупрозрачная тень
+                        elevation: 8,
+                        shadowColor: Colors.grey.withOpacity(0.3),
                       ),
                       child: const Text(
                         'Войти через Google',

@@ -16,7 +16,6 @@ class SchedulePage extends StatelessWidget {
 
     if (selectedDate != null) {
       // You can use the selected date as needed
-      print('Selected date: ${selectedDate.toLocal()}');
     }
   }
 

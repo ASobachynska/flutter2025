@@ -16,9 +16,8 @@ class UserModel {
   factory UserModel.fromFirebaseUser(User user) {
     return UserModel(
       uid: user.uid,
-      email:
-          user.email ?? '', // Используем пустую строку, если email отсутствует
-      displayName: user.displayName ?? 'No name', // Если имя не указано
+      email: user.email ?? '',
+      displayName: user.displayName ?? 'No name',
       photoURL: user.photoURL ?? 'no photo',
     );
   }

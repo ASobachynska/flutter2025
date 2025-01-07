@@ -74,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: notesList.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot document = notesList[index];
-                        //String docID = document.id;
                         Map<String, dynamic> data =
                             document.data() as Map<String, dynamic>;
                         String subjectName = data['name'];

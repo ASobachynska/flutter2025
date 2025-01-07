@@ -7,7 +7,6 @@ class AuthViewModel extends ChangeNotifier {
     required AuthService authService,
   }) : _authService = AuthService() {
     _checkAuthorizedStatus();
-    print('AUTH Service created');
   }
   final AuthService _authService;
 
@@ -20,7 +19,6 @@ class AuthViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> loginWithGoogle() async {
-    print('Login function in vm called');
     try {
       _errorMessage = null;
       _user = await _authService.signInWithGoogle();
@@ -35,7 +33,6 @@ class AuthViewModel extends ChangeNotifier {
     } catch (error) {
       _errorMessage = error.toString();
       notifyListeners();
-      print("Error during login: $error");
     }
   }
 
@@ -47,7 +44,6 @@ class AuthViewModel extends ChangeNotifier {
 
   void _checkAuthorizedStatus() {
     _isLoggedIn = _authService.checkAuthorizedStatus();
-    print('Auth checks status: $_isLoggedIn');
     notifyListeners();
   }
 }

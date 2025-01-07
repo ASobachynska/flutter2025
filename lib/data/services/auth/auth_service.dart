@@ -62,8 +62,7 @@ class AuthService {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
         return null;
-      } //user cancelled login flow
-      print('Fuction mobile login called');
+      }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       final credentials = GoogleAuthProvider.credential(
