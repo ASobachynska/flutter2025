@@ -39,7 +39,7 @@ class SchedulePage extends StatelessWidget {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      'assets/backgrounds/profile.png'), // Зображення на фоні
+                      'assets/images/backgrounds/profile.png'), // Зображення на фоні
                   fit: BoxFit.cover, // Масштабування для покриття всього екрану
                 ),
               ),

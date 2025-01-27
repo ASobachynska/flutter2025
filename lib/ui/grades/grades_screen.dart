@@ -35,7 +35,7 @@ class CurrentGradesPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/profile.png'), // Ваше зображення
+                  image: AssetImage('assets/images/backgrounds/profile.png'), // Ваше зображення
                   fit: BoxFit.cover,
                 ),
               ),

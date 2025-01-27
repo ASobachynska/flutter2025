@@ -31,7 +31,7 @@ class DisciplinesPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/profile.png'), // Шлях до зображення
+            image: AssetImage('assets/images/backgrounds/profile.png'), // Шлях до зображення
             fit: BoxFit.cover, // Масштабування зображення
           ),
         ),

@@ -43,9 +43,9 @@ class _MainNavigationState extends State<MainNavigation> {
           BottomNavigationBarItem(
               icon: Icon(Icons.schedule), label: UIConst.scheduleLabel),
           BottomNavigationBarItem(
-              icon: Icon(Icons.grade), label: UIConst.disciplinesLabel),
+              icon: Icon(Icons.grade), label: UIConst.marksLabel),
           BottomNavigationBarItem(
-              icon: Icon(Icons.book), label: UIConst.marksLabel),
+              icon: Icon(Icons.book), label: UIConst.disciplinesLabel),
           BottomNavigationBarItem(
               icon: Icon(Icons.person), label: UIConst.userProfileLabel),
         ],

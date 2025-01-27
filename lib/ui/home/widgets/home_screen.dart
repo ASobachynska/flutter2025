@@ -79,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         String subjectName = data['name'];
 
                         return ListTile(
-                          title: Text(
-                              "Cпроба отримання данних від Firebase Storage. Знайдено предмет: $subjectName"),
+                          // title: Text(
+                              // "Cпроба отримання данних від Firebase Storage. Знайдено предмет: $subjectName"),
                         );
                       });
                 } else {
