@@ -123,7 +123,7 @@ class _AuthScreen extends State<AuthScreen> {
                         shadowColor: Colors.grey.withOpacity(0.3),
                       ),
                       child: const Text(
-                        'Войти через Google',
+                        'Увійти через Google',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,

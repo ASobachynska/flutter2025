@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class SchedulePage extends StatelessWidget {
   //TODO: add viewmodel into constructor and other mandatory fields
+  //TODO: додати модель перегляду в конструктор та інші обов’язкові поля
   const SchedulePage({super.key});
 
   // Function to show the date picker

@@ -18,7 +18,8 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => AuthViewModel(
               authService: context
-                  .read()), //TODO: redefine MultiProvider in separate file after main flow implementation
+                  .read()), //TODO: redefine MultiProvider in separate file after main flow implementation 
+                            //TODO: перевизначте MultiProvider в окремому файлі після реалізації основного потоку
         ),
         ChangeNotifierProvider(
           create: (context) =>

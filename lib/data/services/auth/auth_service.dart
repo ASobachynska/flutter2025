@@ -86,4 +86,6 @@ class AuthService {
   bool _verifyEmailDomain(String? email) {
     return email!.endsWith('@kpnu.edu.ua');
   }
+
+  getCurrentUserEmail() {}
 }

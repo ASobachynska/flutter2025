@@ -65,28 +65,28 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          StreamBuilder(
-              stream: firestoreService.getMarks(),
-              builder: (context, snaphot) {
-                if (snaphot.hasData) {
-                  List notesList = snaphot.data!.docs;
-                  return ListView.builder(
-                      itemCount: notesList.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot document = notesList[index];
-                        Map<String, dynamic> data =
-                            document.data() as Map<String, dynamic>;
-                        String subjectName = data['name'];
+          // StreamBuilder(
+          //     stream: firestoreService.getMarks(),
+          //     builder: (context, snaphot) {
+          //       if (snaphot.hasData) {
+          //         List notesList = snaphot.data!.docs;
+          //         return ListView.builder(
+          //             itemCount: notesList.length,
+          //             itemBuilder: (context, index) {
+          //               DocumentSnapshot document = notesList[index];
+          //               Map<String, dynamic> data =
+          //                   document.data() as Map<String, dynamic>;
+          //               String subjectName = data['name'];
 
-                        return ListTile(
-                          // title: Text(
-                              // "Cпроба отримання данних від Firebase Storage. Знайдено предмет: $subjectName"),
-                        );
-                      });
-                } else {
-                  return const Text('No any data');
-                }
-              })
+          //               return ListTile(
+          //                 // title: Text(
+          //                     // "Cпроба отримання данних від Firebase Storage. Знайдено предмет: $subjectName"),
+          //               );
+          //             });
+          //       } else {
+          //         return const Text('No any data');
+          //       }
+          //     })
         ],
       ),
     );
