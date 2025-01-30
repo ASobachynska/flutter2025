@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_department_app/data/services/firestore/firestore.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+// Закоментований StreamBuilder, який, ймовірно, повинен отримувати оцінки студентів із Firestore
           // StreamBuilder(
           //     stream: firestoreService.getMarks(),
           //     builder: (context, snaphot) {

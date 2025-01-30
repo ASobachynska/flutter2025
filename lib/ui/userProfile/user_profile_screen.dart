@@ -1,5 +1,5 @@
 import 'package:digital_department_app/routing/routes.dart';
-import 'package:digital_department_app/ui/userProfie/user_profile_viewmodel.dart';
+import 'package:digital_department_app/ui/userProfile/user_profile_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +8,7 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.viewModel});
 
   final UserProfileViewModel viewModel;
-
+  // UserProfileViewModel для отримання поточного користувача
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
@@ -195,7 +195,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  void _onSignOutResults() {
+  void _onSignOutResults() { // Реагує на вихід (viewModel.signOut()) і повертає на екран входу
     if (widget.viewModel.currentUser == null) {
       context.go(Routes.login);
     }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+// сервіс AuthService відповідає за аутентифікацію користувача в додатку
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   bool _isLoggedIn = false;
@@ -33,7 +34,8 @@ class AuthService {
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
-
+  
+  // перевіряє, чи користувач увійшов в систему
   bool checkAuthorizedStatus() {
     if (getCurrentUser() != null) {
       _isLoggedIn = true;

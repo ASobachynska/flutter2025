@@ -1,8 +1,12 @@
+// Головний екран автентифікації, який відображає кнопку входу через 
+// Google та реагує на стан авторизаці
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// Клас AuthScreen це StatefulWidget, який приймає AuthViewModel як параметр.
+// Він створює _AuthScreen як State, де буде логіка UI.
 class AuthScreen extends StatefulWidget {
   final AuthViewModel viewModel;
   const AuthScreen({super.key, required this.viewModel});
@@ -14,20 +18,20 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreen extends State<AuthScreen> {
-  @override
+  @override // Додає _onLoginResult як лістенер до viewModel, щоб слідкувати за змінами стану авторизації
   void initState() {
     super.initState();
     widget.viewModel.addListener(_onLoginResult);
   }
 
-  @override
+  @override // Видаляє старий лістенер перед тим, як додати новий (але тут є помилка)
   void didUpdateWidget(covariant AuthScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     oldWidget.viewModel.removeListener(_onLoginResult);
     oldWidget.viewModel.addListener(_onLoginResult);
   }
 
-  @override
+  @override // Видаляє лістенер при знищенні екрану
   void dispose() {
     widget.viewModel.removeListener(_onLoginResult);
     super.dispose();

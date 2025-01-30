@@ -1,3 +1,5 @@
+// Цей файл відповідає за відображення підсумкових оцінок студентів у вигляді списку. 
+// Він використовує FutureBuilder для отримання даних, які будуть завантажуватись із Firestore Database
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -56,18 +58,18 @@ class CurrentGradesPage extends StatelessWidget {
           // ),
           // Основний контент
           FutureBuilder<List<Map<String, String>>>(
-            future: null,
+            future: null, // TODO: має null, але потрібно змінити на запит до Firestore
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              }
+              } // Відображає CircularProgressIndicator, якщо дані ще завантажуються
               if (snapshot.hasError) {
                 return Center(child: Text('Помилка: ${snapshot.error}'));
               }
               final data = snapshot.data ?? [];
               if (data.isEmpty) {
                 return const Center(child: Text('Дані відсутні'));
-              }
+              } // Виводить повідомлення "Дані відсутні", якщо немає результатів
               return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {

@@ -1,3 +1,5 @@
+// Цей файл відповідає за маршрутизацію в digital-department-app і 
+// використовує GoRouter для керування навігацією
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
 import 'package:digital_department_app/ui/auth/auth_screen.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
@@ -5,20 +7,21 @@ import 'package:digital_department_app/ui/core/ui/navigation_menu/navigation_men
 import 'package:digital_department_app/ui/disciplines/disciplines_screen.dart';
 import 'package:digital_department_app/ui/grades/grades_screen.dart';
 import 'package:digital_department_app/ui/home/widgets/home_screen.dart';
-import 'package:digital_department_app/ui/shedule/shedule_screen.dart';
-import 'package:digital_department_app/ui/userProfie/user_profile_screen.dart';
-import 'package:digital_department_app/ui/userProfie/user_profile_viewmodel.dart';
+import 'package:digital_department_app/ui/schedule/schedule_screen.dart';
+import 'package:digital_department_app/ui/userProfile/user_profile_screen.dart';
+import 'package:digital_department_app/ui/userProfile/user_profile_viewmodel.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
+// Ключ для навігації в ShellRoute, щоб правильно обробляти дочірні маршрути
 
 GoRouter router(AuthService authService) {
   return GoRouter(
-    initialLocation:
-        authService.checkAuthorizedStatus() ? Routes.home : Routes.login,
+    initialLocation: // initialLocation перевіряє, чи користувач авторизований
+        authService.checkAuthorizedStatus() ? Routes.home : Routes.login, // Якщо так → переходить на Routes.home | Якщо ні → відкриває Routes.login.
     // redirect: (context, state) {
     //   if (authService.checkAuthorizedStatus()) {
     //     return Routes.home;
@@ -28,13 +31,14 @@ GoRouter router(AuthService authService) {
     // },
     debugLogDiagnostics: true,
     routes: [
-      ShellRoute(
+      ShellRoute( // Головний навігаційний контейнер (з MainNavigation)
           navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) => MainNavigation(
                 child: child,
               ),
+// Це дозволяє змінювати екрани без повторного створення BottomNavigationBar
           routes: [
-            GoRoute(
+            GoRoute( // HomeScreen()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.home,
               name: 'home',
@@ -42,17 +46,18 @@ GoRouter router(AuthService authService) {
                 return HomeScreen();
               },
             ),
-            GoRoute(
+            GoRoute( // UserProfileScreen()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.userProfile,
               name: 'userProfile',
               builder: (context, state) {
                 return UserProfileScreen(
+// UserProfileScreen отримує UserProfileViewModel, який бере authService через Provider
                   viewModel: UserProfileViewModel(authService: context.read()),
                 );
               },
             ),
-            GoRoute(
+            GoRoute( // SchedulePage()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.schedule,
               name: 'schedule',
@@ -60,7 +65,7 @@ GoRouter router(AuthService authService) {
                 return SchedulePage();
               },
             ),
-            GoRoute(
+            GoRoute( // DisciplinesPage()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.academicDisciplines,
               name: 'academicDisciplines',
@@ -68,7 +73,7 @@ GoRouter router(AuthService authService) {
                 return DisciplinesPage(); //TODO: replace with viewModel and service constructor
               },
             ),
-            GoRoute(
+            GoRoute( // CurrentGradesPage()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.grades,
               name: 'grades',
@@ -77,13 +82,14 @@ GoRouter router(AuthService authService) {
               },
             ),
           ]),
-      GoRoute(
+      GoRoute( // AuthScreen()
         path: Routes.login,
         name: 'login',
         builder: (context, state) {
           return AuthScreen(
             viewModel: AuthViewModel(authService: context.read()),
           );
+          // AuthScreen отримує AuthViewModel, який керує автентифікацією
         },
       ),
     ],

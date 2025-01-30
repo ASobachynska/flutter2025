@@ -2,7 +2,7 @@ import 'package:digital_department_app/config/firebase_options.dart';
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
 import 'package:digital_department_app/routing/router.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
-import 'package:digital_department_app/ui/userProfie/user_profile_viewmodel.dart';
+import 'package:digital_department_app/ui/userProfile/user_profile_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

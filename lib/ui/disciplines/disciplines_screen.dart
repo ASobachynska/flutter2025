@@ -1,7 +1,8 @@
+// Цей файл визначає DisciplinesPage, яка показує список дисциплін та 
+// дозволяє обрати рік навчання через DropdownButton
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 
 class DisciplinesPage extends StatelessWidget {
   // final GSheets gsheets;
@@ -108,7 +109,7 @@ class DisciplinesPage extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
-                  }
+                  } // Відображає список дисциплін, якщо snapshot.data містить значення
                   if (snapshot.hasError) {
                     return Center(child: Text('Помилка: ${snapshot.error}'));
                   }
@@ -116,6 +117,7 @@ class DisciplinesPage extends StatelessWidget {
                   if (data.isEmpty) {
                     return const Center(child: Text('Дисципліни відсутні'));
                   }
+// кожен елемент містить: 1 Назву дисципліни 2 Тип дисципліни 3 Семестр 4 Форма контролю 5 Викладача та його email
                   return ListView.builder(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
@@ -190,6 +192,7 @@ class DisciplinesPage extends StatelessWidget {
                                           decorationColor: Colors
                                               .grey, // Сірий колір підкреслення
                                         ),
+//умовно TODO: TapGestureRecognizer() для email поки що не відкриває поштовий клієнт – потрібно реалізувати launchUrl(emailUri)
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             final Uri emailUri = Uri(

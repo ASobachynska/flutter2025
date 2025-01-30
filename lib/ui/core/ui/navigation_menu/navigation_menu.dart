@@ -1,3 +1,4 @@
+// Цей файл містить клас MainNavigation, який відповідає за нижню навігаційну панель (BottomNavigationBar). Він дозволяє перемикатися між основними розділами додатка
 import 'package:digital_department_app/routing/routes.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:digital_department_app/utils/constants/ui_const.dart';
@@ -8,7 +9,7 @@ class MainNavigation extends StatefulWidget {
   final Widget child;
   const MainNavigation({super.key, required this.child});
 
-  @override
+  @override // для збереження поточного активного індексу вкладки
   State<MainNavigation> createState() => _MainNavigationState();
 }
 
@@ -20,7 +21,7 @@ class _MainNavigationState extends State<MainNavigation> {
       _currentIndex = index;
     });
     context.go(_routes[index]);
-  }
+  } // Визначає маршрути (_routes), які використовуються для переходів
 
   @override
   void initState() {
@@ -37,8 +38,8 @@ class _MainNavigationState extends State<MainNavigation> {
         onTap: _onMenuItemTap,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.black54,
-        items: const [
-          BottomNavigationBarItem(
+        items: const [ 
+          BottomNavigationBarItem( 
               icon: Icon(Icons.home), label: UIConst.mainLabel),
           BottomNavigationBarItem(
               icon: Icon(Icons.schedule), label: UIConst.scheduleLabel),
@@ -48,7 +49,7 @@ class _MainNavigationState extends State<MainNavigation> {
               icon: Icon(Icons.book), label: UIConst.disciplinesLabel),
           BottomNavigationBarItem(
               icon: Icon(Icons.person), label: UIConst.userProfileLabel),
-        ],
+        ], //константи з UIConst для підписів кнопок
       ),
     );
   }
