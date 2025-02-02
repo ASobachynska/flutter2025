@@ -1,50 +1,74 @@
-// Це модель представлення (ViewModel), яка керує логікою авторизації
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  AuthViewModel({
-    required AuthService authService,
-  }) : _authService = AuthService() { // приватний екземпляр AuthService
-    _checkAuthorizedStatus();
-  }
   final AuthService _authService;
+  User? _user;
+  bool _isLoggedIn = false;
+  String? _errorMessage;
+  String? _group;
+  int? _course;
 
-  User? _user; // зберігає поточного користувача (User?)
-  bool _isLoggedIn = false; // прапорець входу (true/false)
-  String? _errorMessage; // зберігає текст помилки (якщо є)
+  AuthViewModel({required AuthService authService}) : _authService = authService {
+    _checkLoginStatus();
+  }
 
-  User? get user => _user; // повертає _user
-  bool get isLoggedIn => _isLoggedIn; // повертає _isLoggedIn
-  String? get errorMessage => _errorMessage; // повертає _errorMessage
+  User? get user => _user;
+  bool get isLoggedIn => _isLoggedIn;
+  String? get errorMessage => _errorMessage;
+  String? get group => _group;
+  int? get course => _course;
+
+  void _parseEmail(String email) {
+    final regex = RegExp(r'([a-zA-Z]+\d+[bm]?)(\d{2})');
+    final match = regex.firstMatch(email);
+
+    if (match != null) {
+      _group = match.group(1);
+      int year = int.parse(match.group(2)!);
+      int currentYear = DateTime.now().year % 100;
+      _course = (currentYear - year) + 1;
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> _checkLoginStatus() async {
+    _user = _authService.getCurrentUser();
+    _isLoggedIn = _user != null;
+    if (_user != null) {
+      _parseEmail(_user!.email!);
+    }
+    notifyListeners();
+  }
 
   Future<void> loginWithGoogle() async {
     try {
       _errorMessage = null;
-      _user = await _authService.signInWithGoogle(); // Викликає signInWithGoogle() у AuthService
+      _user = await _authService.signInWithGoogle();
+
       if (_authService.error != null) {
         _errorMessage = _authService.error;
-        notifyListeners(); // Якщо AuthService повертає помилку → зберігає її у _errorMessage
-      }
-      if (_authService.isLoggedIn) {
+      } else if (_authService.isLoggedIn && _user != null) {
         _isLoggedIn = true;
-        notifyListeners(); // Якщо авторизація успішна → змінює _isLoggedIn на true
+        _parseEmail(_user!.email!);
       }
+
+      notifyListeners();
     } catch (error) {
       _errorMessage = error.toString();
       notifyListeners();
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> logout() async {
     await _authService.signOut();
+    _user = null;
     _isLoggedIn = false;
+    _group = null;
+    _course = null;
     notifyListeners();
-  } // Викликає signOut() у AuthService, очищає _isLoggedIn, повідомляє UI
-
-  void _checkAuthorizedStatus() {
-    _isLoggedIn = _authService.checkAuthorizedStatus();
-    notifyListeners();
-  } // Перевіряє, чи користувач вже увійшов, і оновлює _isLoggedIn
+  }
 }
+

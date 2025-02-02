@@ -8,7 +8,7 @@ class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.viewModel});
 
   final UserProfileViewModel viewModel;
-  // UserProfileViewModel для отримання поточного користувача
+
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
@@ -25,47 +25,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/profile3.png'), // Background image path
-                fit: BoxFit.cover, // Image covers entire screen
+                image: AssetImage('assets/images/profile3.png'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          // Main content
           Center(
             child: Transform.translate(
-              offset: const Offset(0, 10), // Top margin
+              offset: const Offset(0, 10),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  mainAxisSize:
-                      MainAxisSize.min, // Center content based on its size
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Profile circle with shadow
                     Container(
-                      width: 120, // Container size
+                      width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        shape:
-                            BoxShape.circle, // Ensures the shadow is circular
+                        shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 1,
                             blurRadius: 10,
-                            offset: Offset(0, 4), // Shadow specifically below
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
-                      child: CircleAvatar(
-                        radius: 60, // Avatar size
-                        backgroundColor: Colors.white, // Avatar background
+                      child: const CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white,
                         child: Icon(
-                          Icons.person, // Default profile icon
+                          Icons.person,
                           size: 50,
                           color: AppColors.primary,
                         ),
@@ -89,75 +83,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         children: [
                           Text(
                             widget.viewModel.currentUser?.displayName ??
-                                'Can not userName',
-                            style: TextStyle(
+                                'Не вдалося отримати імʼя',
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Група kn1b21          4 Курс          Бакалавр',
-                            style: TextStyle(fontSize: 16),
+                            'Група ${widget.viewModel.group}          ${widget.viewModel.currentCourse} курс          Бакалавр',
+                            style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            '122 Комп\'ютерні науки та інформаційні технології',
+                          const Text(
+                            '122 Компʼютерні науки та інформаційні технології',
                             style: TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             widget.viewModel.currentUser?.email ??
-                                "Can't get email",
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      width: 350,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(1),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 5),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: widget.viewModel.launchURL,
-                                child: Icon(
-                                  Icons.language,
-                                  size: 30,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: widget.viewModel.launchURL,
-                                  child: Text(
-                                    'https://cs.kpnu.edu.ua/',
-                                    style: TextStyle(
-                                        fontSize: 14, color: AppColors.primary),
-                                    overflow: TextOverflow.visible,
-                                    softWrap: true,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Електронна пошта: cs@kpnu.edu.ua, kaf_inf@kpnu.edu.ua',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                            softWrap: true,
+                                "Не вдалося отримати email",
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.black),
                           ),
                         ],
                       ),
@@ -195,7 +140,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  void _onSignOutResults() { // Реагує на вихід (viewModel.signOut()) і повертає на екран входу
+  void _onSignOutResults() {
     if (widget.viewModel.currentUser == null) {
       context.go(Routes.login);
     }

@@ -1,4 +1,5 @@
-// Цей файл містить клас MainNavigation, який відповідає за нижню навігаційну панель (BottomNavigationBar). Він дозволяє перемикатися між основними розділами додатка
+// Цей файл містить клас MainNavigation, який відповідає за нижню навігаційну панель (BottomNavigationBar). 
+// Він дозволяє перемикатися між основними розділами застосунку
 import 'package:digital_department_app/routing/routes.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:digital_department_app/utils/constants/ui_const.dart';
