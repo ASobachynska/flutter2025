@@ -46,17 +46,19 @@ GoRouter router(AuthService authService) {
                 return HomeScreen();
               },
             ),
-            GoRoute( // UserProfileScreen()
-              parentNavigatorKey: _shellNavigatorKey,
-              path: Routes.userProfile,
-              name: 'userProfile',
-              builder: (context, state) {
-                return UserProfileScreen(
-// UserProfileScreen отримує UserProfileViewModel, який бере authService через Provider
-                  viewModel: UserProfileViewModel(authService: context.read()),
-                );
-              },
-            ),
+           GoRoute(
+  parentNavigatorKey: _shellNavigatorKey,
+  path: Routes.userProfile,
+  name: 'userProfile',
+  builder: (context, state) {
+    return UserProfileScreen(
+      viewModel: UserProfileViewModel(
+        authService: context.read<AuthService>(),
+        authViewModel: context.read<AuthViewModel>(),  // Додаємо authViewModel
+      ),
+    );
+  },
+),
             GoRoute( // SchedulePage()
               parentNavigatorKey: _shellNavigatorKey,
               path: Routes.schedule,

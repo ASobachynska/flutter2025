@@ -22,9 +22,13 @@ void main() async {
                             //TODO: перевизначте MultiProvider в окремому файлі після реалізації основного потоку
         ),
         ChangeNotifierProvider(
-          create: (context) =>
-              UserProfileViewModel(authService: context.read()),
-        )
+  create: (context) =>
+      UserProfileViewModel(
+        authService: context.read<AuthService>(),
+        authViewModel: context.read<AuthViewModel>(),  // Додаємо authViewModel
+      ),
+)
+
       ],
       child: MyApp(),
     ),

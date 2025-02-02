@@ -1,68 +1,46 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
-  final AuthService _authService;
-  User? _currentUser;
-  
-  User? get currentUser => _currentUser;
-  String get group => _extractGroup();
-  int get currentCourse => _calculateCourse();
+  final AuthService _authService;  // Сервіс для отримання даних користувача
+  final AuthViewModel _authViewModel;  // Сервіс для отримання групи та курсу користувача
+  User? _currentUser;  // Поточний користувач
 
-  UserProfileViewModel({required AuthService authService})
-      : _authService = authService {
-    _obtainUserDataFromService();
+  User? get currentUser => _currentUser;  // Getter для поточного користувача
+  String get group => _authViewModel.group ?? '';  // Група користувача
+  int get currentCourse => _authViewModel.course ?? 0;  // Курс користувача
+  String get degree => _authViewModel.degree ?? '';  // Ступінь користувача (Бакалавр або Магістр)
+
+  UserProfileViewModel({required AuthService authService, required AuthViewModel authViewModel})
+      : _authService = authService,
+        _authViewModel = authViewModel {
+    _obtainUserDataFromService();  // Отримання даних про користувача
   }
 
+  // Отримуємо поточного користувача
   void _obtainUserDataFromService() {
     _currentUser = _authService.getCurrentUser();
+    notifyListeners();  // Оновлення UI
   }
 
-  String _extractGroup() {
-    final email = _currentUser?.email ?? '';
-    final groupPart = email.split('.').first;
-    return groupPart.toUpperCase();
-  }
-
-
-int _calculateCourse() {
-  final email = _currentUser?.email ?? '';
-  final match = RegExp(r'(\d{2})').firstMatch(email);
-  
-  if (match == null) return 0;
-  
-  final admissionYear = int.parse('20${match.group(1)!}');
-  final now = DateTime.now();
-  
-  // Обчислюємо поточний курс, але враховуємо, що до вересня поточного року студент залишається на старому курсі
-  int course = now.year - admissionYear;
-  if (now.month < 9) course--; // Зменшуємо курс, якщо до вересня місяця
-
-  // Якщо зараз 2025 рік і місяць до вересня, студент ще на 4 курсі
-  if (now.year == 2025 && now.month < 9) {
-    course = 4;
-  }
-
-  return (course >= 1 && course <= 4) ? course : 4; // Обмеження для 4 курсів
-}
-
-
+  // Вихід з акаунта
   Future<void> signOut() async {
     try {
-      await _authService.signOut();
-      _obtainUserDataFromService();
-      notifyListeners();
+      await _authService.signOut();  // Вихід
+      _obtainUserDataFromService();  // Оновлення даних
+      notifyListeners();  // Оновлення UI
     } catch (error) {
-      print('Помилка при виході: $error');
+      print('Помилка при виході: $error');  // Логування помилки
     }
   }
 
   Future<void> launchURL() async {
     const url = 'https://cs.kpnu.edu.ua/';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(url)) { 
+      await launch(url);  // Відкриває сайт
     } else {
       throw 'Не вдалося відкрити $url';
     }

@@ -89,7 +89,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Група ${widget.viewModel.group}          ${widget.viewModel.currentCourse} курс          Бакалавр',
+                            'Група ${widget.viewModel.group}      ${widget.viewModel.currentCourse} курс      ${widget.viewModel.degree}',
                             style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 8),
