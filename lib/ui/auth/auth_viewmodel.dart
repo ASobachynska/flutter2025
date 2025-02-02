@@ -38,6 +38,7 @@ class AuthViewModel extends ChangeNotifier {
     } else {
       _course = (currentYear - year) + 1;
     }
+    
 
     // Перевіряємо наявність і "B", і "M"
     if (_group!.contains('B') && _group!.contains('M')) {
