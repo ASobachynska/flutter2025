@@ -1,48 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:digital_department_app/data/services/firestore/firestore.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
-  final AuthService _authService;  // Сервіс для отримання даних користувача
-  final AuthViewModel _authViewModel;  // Сервіс для отримання групи та курсу користувача
-  User? _currentUser;  // Поточний користувач
+  final AuthService _authService;
+  final AuthViewModel _authViewModel;
+  final FirestoreService _firestoreService;
+  User? _currentUser;
+  DocumentSnapshot? _userProfile;
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  User? get currentUser => _currentUser;  // Getter для поточного користувача
-  String get group => _authViewModel.group ?? '';  // Група користувача
-  int get currentCourse => _authViewModel.course ?? 0;  // Курс користувача
-  String get degree => _authViewModel.degree ?? '';  // Ступінь користувача (Бакалавр або Магістр)
+  User? get currentUser => _currentUser;
+  String get group => _authViewModel.group ?? 'Невідома група';
+  int get currentCourse => _authViewModel.course ?? 0;
+  String get degree => _authViewModel.degree ?? 'Невідомий ступінь';
+  String? get errorMessage => _errorMessage;
+  bool get isLoading => _isLoading;
 
-  UserProfileViewModel({required AuthService authService, required AuthViewModel authViewModel})
-      : _authService = authService,
-        _authViewModel = authViewModel {
-    _obtainUserDataFromService();  // Отримання даних про користувача
+  String get studentName => _userProfile?['student_name'] ?? 'Невідомо';
+  String get email => _currentUser?.email ?? 'Не вдалося отримати email';
+
+  UserProfileViewModel({
+    required AuthService authService,
+    required AuthViewModel authViewModel,
+    required FirestoreService firestoreService,
+  })  : _authService = authService,
+        _authViewModel = authViewModel,
+        _firestoreService = firestoreService {
+    _fetchUserData();
   }
 
-  // Отримуємо поточного користувача
-  void _obtainUserDataFromService() {
-    _currentUser = _authService.getCurrentUser();
-    notifyListeners();  // Оновлення UI
-  }
-
-  // Вихід з акаунта
-  Future<void> signOut() async {
+  void _fetchUserData() async {
     try {
-      await _authService.signOut();  // Вихід
-      _obtainUserDataFromService();  // Оновлення даних
-      notifyListeners();  // Оновлення UI
-    } catch (error) {
-      print('Помилка при виході: $error');  // Логування помилки
+      _currentUser = _authService.getCurrentUser();
+      if (_currentUser != null && _currentUser!.uid.isNotEmpty) {
+        _isLoading = true;
+        notifyListeners();
+
+        // Use the updated getUserProfile method from FirestoreService
+        DocumentSnapshot? snapshot = await _firestoreService.getUserProfile(_currentUser!.uid);
+        
+        if (snapshot != null) {
+          _userProfile = snapshot;
+        } else {
+          _errorMessage = "Не вдалося знайти профіль студента";
+        }
+
+        _isLoading = false;
+        notifyListeners();
+      } else {
+        _errorMessage = "Користувач не знайдений або UID порожній";
+        _isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = "Помилка при отриманні даних: $e";
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> launchURL() async {
-    const url = 'https://cs.kpnu.edu.ua/';
-    if (await canLaunch(url)) { 
-      await launch(url);  // Відкриває сайт
-    } else {
-      throw 'Не вдалося відкрити $url';
+  Future<void> signOut() async {
+    try {
+      await _authService.signOut();
+      _fetchUserData(); // Оновлення після виходу
+    } catch (error) {
+      print('Помилка при виході: $error');
     }
   }
 }

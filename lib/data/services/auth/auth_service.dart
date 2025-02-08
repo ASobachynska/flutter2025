@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-// сервіс AuthService відповідає за аутентифікацію користувача в додатку
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   bool _isLoggedIn = false;
@@ -17,12 +16,10 @@ class AuthService {
     getCurrentUser();
   }
 
-  // Sign in with google account
   Future<User?> signInWithGoogle() async {
     return kIsWeb ? await _webGoogleSignIn() : await _mobileGoogleSignIn();
   }
 
-  // Sign out method
   Future<void> signOut() async {
     await GoogleSignIn().signOut();
     await _firebaseAuth.signOut();
@@ -30,26 +27,24 @@ class AuthService {
     _isLoggedIn = false;
   }
 
-  // Get current user
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
   
-  // перевіряє, чи користувач увійшов в систему
-  bool checkAuthorizedStatus() {
-    if (getCurrentUser() != null) {
-      _isLoggedIn = true;
-    } else {
-      _isLoggedIn = false;
-    }
-    return _isLoggedIn;
-  }
+ bool checkAuthorizedStatus() {
+  final currentUser = getCurrentUser();
+  _isLoggedIn = currentUser != null;
+  return _isLoggedIn;
+}
 
   Future<User?> _webGoogleSignIn() async {
     try {
       final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      googleProvider.setCustomParameters({'prompt': 'select_account'});
+      
       final UserCredential userCredential =
           await _firebaseAuth.signInWithPopup(googleProvider);
+
       _isLoggedIn = true;
       return userCredential.user;
     } catch (error) {
@@ -57,37 +52,47 @@ class AuthService {
       return null;
     }
   }
+  
+Future<User?> _mobileGoogleSignIn() async {
+  _error = null;
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn(
+      clientId: "936391854887-5bj2sa89lsv0uartg8f7bh658m6rcmmv.apps.googleusercontent.com",
+    ).signIn();
 
-  Future<User?> _mobileGoogleSignIn() async {
-    _error = null;
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        return null;
-      }
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final credentials = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      final userCredentials =
-          await _firebaseAuth.signInWithCredential(credentials);
-      if (_verifyEmailDomain(userCredentials.user!.email)) {
-        _isLoggedIn = true;
-        _error = null;
-        return userCredentials.user;
-      } else {
-        await signOut();
-        throw Exception('Invalid email domain. Available @kpnu.edu.ua only');
-      }
-    } catch (error) {
-      _error = error.toString();
-      rethrow;
+    if (googleUser == null) {
+      return null;
     }
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final credentials = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    final userCredentials = await _firebaseAuth.signInWithCredential(credentials);
+
+    if (_verifyEmailDomain(userCredentials.user!.email)) {
+      _isLoggedIn = true;
+      _error = null;
+      return userCredentials.user;
+    } else {
+      await signOut();
+      throw Exception('Invalid email domain. Only @kpnu.edu.ua allowed');
+    }
+  } on FirebaseAuthException catch (e) {
+    _error = 'Firebase Auth Error: ${e.message}';
+    debugPrint(_error);
+    rethrow;
+  } catch (error) {
+    _error = 'Unexpected error: $error';
+    debugPrint(_error);
+    rethrow;
   }
+}
+
 
   bool _verifyEmailDomain(String? email) {
     return email!.endsWith('@kpnu.edu.ua');
   }
+  
 
   getCurrentUserEmail() {}
 }

@@ -1,6 +1,8 @@
 import 'package:digital_department_app/data/services/firestore/firestore.dart';
+import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,7 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final FirestoreService firestoreService = FirestoreService();
+  late FirestoreService firestoreService;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    firestoreService = FirestoreService(
+      authViewModel: Provider.of<AuthViewModel>(context, listen: false),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,30 +36,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Stack(
         children: [
-          // Фонове зображення
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                      'assets/images/backgrounds/profile.png'), // Зображення на фоні
-                  fit: BoxFit
-                      .cover, // Масштабування зображення для покриття всього фону
+                  image: AssetImage('assets/images/backgrounds/profile.png'),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
-          // Центральний контейнер з білим фоном та тінню, що обтікає зображення
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 20.0, horizontal: 16.0), // Відступи зверху та знизу
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
               child: Container(
-                padding:
-                    const EdgeInsets.all(10.0), // Відступи всередині контейнера
+                padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Білий фон
-                  borderRadius: BorderRadius.circular(12), // Округлені кути
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.3),
@@ -58,35 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 child: Image.asset(
-                  'assets/images/openlection.jpg', // Зображення всередині контейнера
-                  fit: BoxFit.fitHeight, // Підлаштовує зображення під висоту
+                  'assets/images/openlection.jpg',
+                  fit: BoxFit.fitHeight,
                 ),
               ),
             ),
           ),
-// Закоментований StreamBuilder, який, ймовірно, повинен отримувати оцінки студентів із Firestore
-          // StreamBuilder(
-          //     stream: firestoreService.getMarks(),
-          //     builder: (context, snaphot) {
-          //       if (snaphot.hasData) {
-          //         List notesList = snaphot.data!.docs;
-          //         return ListView.builder(
-          //             itemCount: notesList.length,
-          //             itemBuilder: (context, index) {
-          //               DocumentSnapshot document = notesList[index];
-          //               Map<String, dynamic> data =
-          //                   document.data() as Map<String, dynamic>;
-          //               String subjectName = data['name'];
-
-          //               return ListTile(
-          //                 // title: Text(
-          //                     // "Cпроба отримання данних від Firebase Storage. Знайдено предмет: $subjectName"),
-          //               );
-          //             });
-          //       } else {
-          //         return const Text('No any data');
-          //       }
-          //     })
         ],
       ),
     );
