@@ -7,8 +7,7 @@ class FirestoreService {
 
   FirestoreService({required AuthViewModel authViewModel}) : _authViewModel = authViewModel;
 
-  // Define the getUserProfile method to return a DocumentSnapshot
-  Future<DocumentSnapshot?> getUserProfile(String uid) async {
+  Future<DocumentSnapshot<Object?>?> getUserProfile() async {
     String? group = _authViewModel.group;
     String? email = _authViewModel.user?.email;
 
@@ -19,7 +18,7 @@ class FirestoreService {
 
     try {
       String studentEmailFormatted = email.replaceAll('.', '_').replaceAll('@', '_');
-      DocumentSnapshot studentDoc = await _db
+      DocumentSnapshot<Object?> studentDoc = await _db
           .collection('groups')
           .doc(group)
           .collection('students_$group')
@@ -31,11 +30,21 @@ class FirestoreService {
         return null;
       }
 
-      print('Student Data: ${studentDoc.data()}');
       return studentDoc;
     } catch (e) {
       print('Error fetching student data: $e');
       return null;
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getGrades() async {
+    DocumentSnapshot<Object?>? studentDoc = await getUserProfile();
+    
+    if (studentDoc == null || !studentDoc.exists) {
+      throw Exception("Не вдалося отримати оцінки студента");
+    }
+
+    var data = studentDoc.data() as Map<String, dynamic>;
+    return List<Map<String, dynamic>>.from(data['additionalRecords'] ?? []);
   }
 }

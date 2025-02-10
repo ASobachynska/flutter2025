@@ -5,10 +5,12 @@ import 'package:digital_department_app/data/services/auth/auth_service.dart';
 import 'package:digital_department_app/data/services/firestore/firestore.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 
+
 class UserProfileViewModel extends ChangeNotifier {
   final AuthService _authService;
   final AuthViewModel _authViewModel;
   final FirestoreService _firestoreService;
+  
   User? _currentUser;
   DocumentSnapshot? _userProfile;
   bool _isLoading = true;
@@ -41,9 +43,8 @@ class UserProfileViewModel extends ChangeNotifier {
         _isLoading = true;
         notifyListeners();
 
-        // Use the updated getUserProfile method from FirestoreService
-        DocumentSnapshot? snapshot = await _firestoreService.getUserProfile(_currentUser!.uid);
-        
+        DocumentSnapshot? snapshot = await _firestoreService.getUserProfile();
+
         if (snapshot != null) {
           _userProfile = snapshot;
         } else {
