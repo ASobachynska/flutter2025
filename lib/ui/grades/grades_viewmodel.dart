@@ -26,7 +26,7 @@ class GradesViewModel extends ChangeNotifier {
           .where((grade) => grade['grade'] != null && grade['grade'].toString().isNotEmpty)
           .toList();
 
-      // Сортуємо дисципліни за полем 'semester' або 'date' (за зростанням)
+      // Сортуємо дисципліни за полем 'semester' або 'year' (за зростанням)
       grades.sort((b, a) {
         // Якщо є поле 'semester', сортуємо за ним
         var semesterA = a['semester'];
