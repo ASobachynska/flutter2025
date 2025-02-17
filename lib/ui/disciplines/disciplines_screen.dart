@@ -1,3 +1,5 @@
+//disciplines_screen.dart:
+
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:digital_department_app/ui/disciplines/disciplines_viewmodel.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';

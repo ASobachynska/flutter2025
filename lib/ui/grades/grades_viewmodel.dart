@@ -2,6 +2,7 @@ import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:digital_department_app/data/services/firestore/firestore.dart';
 
+
 class GradesViewModel extends ChangeNotifier {
   final FirestoreService _firestoreService;
 
