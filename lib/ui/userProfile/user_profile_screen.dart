@@ -106,17 +106,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   'Спеціальність: 122 Компʼютерні науки та інформаційні технології',
                                   style: TextStyle(fontSize: 16),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 8),
                                 Text(
                                   widget.viewModel.errorMessage ?? widget.viewModel.email,
                                   style: const TextStyle(
                                       fontSize: 16, color: Colors.black),
                                 ),
-                                const SizedBox(height: 32),
+                                const SizedBox(height: 16),
                                 const Text(
                                   'Корисні посилання:',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 12),
