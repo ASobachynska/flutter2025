@@ -3,6 +3,7 @@ import 'package:digital_department_app/ui/disciplines/disciplines_viewmodel.dart
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/ui/custom_link.dart';
 
 class DisciplinesPage extends StatelessWidget {
   const DisciplinesPage({super.key});
@@ -12,7 +13,8 @@ class DisciplinesPage extends StatelessWidget {
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     return ChangeNotifierProvider(
-      create: (_) => DisciplinesViewModel(authViewModel: authViewModel)..fetchDisciplines(),
+      create: (_) => DisciplinesViewModel(authViewModel: authViewModel)
+        ..fetchDisciplines(),
       child: Scaffold(
         backgroundColor: AppColors.iconColor,
         appBar: AppBar(
@@ -46,7 +48,8 @@ class DisciplinesPage extends StatelessWidget {
                         DropdownButton<int>(
                           value: viewModel.selectedYear,
                           dropdownColor: Colors.white,
-                          style: const TextStyle(color: Colors.black, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
                           onChanged: (value) {
                             if (value != null) {
                               viewModel.filterDisciplinesByYear(value);
@@ -67,29 +70,38 @@ class DisciplinesPage extends StatelessWidget {
                     child: viewModel.isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : viewModel.hasError
-                            ? Center(child: Text('Помилка: ${viewModel.errorMessage}'))
+                            ? Center(
+                                child: Text('Помилка: ${viewModel.errorMessage}'))
                             : viewModel.filteredDisciplines.isEmpty
                                 ? const Center(child: Text('Дані відсутні'))
                                 : ListView.builder(
-                                    itemCount: viewModel.filteredDisciplines.length,
+                                    itemCount:
+                                        viewModel.filteredDisciplines.length,
                                     itemBuilder: (context, index) {
-                                      final row = viewModel.filteredDisciplines[index];
+                                      final row =
+                                          viewModel.filteredDisciplines[index];
+                                      final teacherEmails = row['teacher_email'] ?? '';
+                                      final emailList = teacherEmails.split(','); // Розділяємо пошти через кому
+                                      
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 8.0, horizontal: 16.0),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey.withOpacity(0.3),
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
                                                 blurRadius: 10,
                                               ),
                                             ],
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
+                                            padding:
+                                                const EdgeInsets.all(16.0),
                                             child: Text.rich(
                                               TextSpan(
                                                 children: [
@@ -97,7 +109,8 @@ class DisciplinesPage extends StatelessWidget {
                                                     text:
                                                         '${row['discipline_name'] ?? 'Невідома дисципліна'} ',
                                                     style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 16,
                                                       color: Colors.black,
                                                     ),
@@ -126,14 +139,15 @@ class DisciplinesPage extends StatelessWidget {
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                  // Display grade only if it exists
-                                                  if (row['grade'] != null && row['grade'] != '')
+                                                  if (row['grade'] != null &&
+                                                      row['grade'] != '')
                                                     TextSpan(
                                                       text:
                                                           'Оцінка: ${row['grade']}\n',
                                                       style: const TextStyle(
                                                         fontSize: 16,
-                                                        color: AppColors.primary,
+                                                        color:
+                                                            AppColors.primary,
                                                       ),
                                                     ),
                                                   TextSpan(
@@ -144,17 +158,20 @@ class DisciplinesPage extends StatelessWidget {
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                  TextSpan(
-                                                    text:
-                                                        '(${row['teacher_email'] ?? 'Email не вказаний'})',
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey,
-                                                      decoration: TextDecoration.underline,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                  
+                                                  // Додаємо CustomLink для кожної адреси електронної пошти
+                              for (var email in emailList)
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: CustomLink(
+                                      text: email.trim(),
+                                      url: 'https://mail.google.com/mail/?view=cm&fs=1&to=$email&su=Тема&body=Текст%20листа',
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                                             ),
                                           ),
                                         ),

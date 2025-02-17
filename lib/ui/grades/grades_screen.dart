@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:digital_department_app/ui/core/ui/custom_link.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
 import 'package:digital_department_app/ui/grades/grades_viewmodel.dart';
 import 'package:digital_department_app/ui/auth/auth_viewmodel.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrentGradesPage extends StatelessWidget {
@@ -44,6 +45,9 @@ class CurrentGradesPage extends StatelessWidget {
                 itemCount: viewModel.grades.length,
                 itemBuilder: (context, index) {
                   final row = viewModel.grades[index];
+                  final teacherEmails = row['teacher_email'] ?? '';
+                  final emailList = teacherEmails.split(','); // Розділяємо пошти через кому
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 16.0),
@@ -92,28 +96,33 @@ class CurrentGradesPage extends StatelessWidget {
                                   color: Colors.black,
                                 ),
                               ),
-                              TextSpan(
-                                text: 'Оцінка: ${row['grade'] ?? 'Немає даних'}\n',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.primary,
+                              if (row['grade'] != null && row['grade'] != '')
+                                TextSpan(
+                                  text: 'Оцінка: ${row['grade']}\n',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.primary,
+                                  ),
                                 ),
-                              ),
-                              TextSpan(
-                                text: '${row['teacher_name'] ?? 'Викладач не вказаний'} ',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
+                                TextSpan(
+                                                    text:
+                                                        '${row['teacher_name'] ?? 'Викладач не вказаний'} ',
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                              // Додаємо CustomLink для кожної адреси електронної пошти
+                              for (var email in emailList)
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: CustomLink(
+                                      text: email.trim(),
+                                      url: 'https://mail.google.com/mail/?view=cm&fs=1&to=$email&su=Тема&body=Текст%20листа',
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              TextSpan(
-                                text: '(${row['teacher_email'] ?? 'Email не вказаний'})',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
                             ],
                           ),
                         ),

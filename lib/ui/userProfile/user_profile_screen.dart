@@ -1,8 +1,10 @@
 import 'package:digital_department_app/routing/routes.dart';
 import 'package:digital_department_app/ui/userProfile/user_profile_viewmodel.dart';
-import 'package:flutter/material.dart';
 import 'package:digital_department_app/ui/core/themes/colors.dart';
+import 'package:digital_department_app/ui/core/ui/custom_link.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key, required this.viewModel});
 
@@ -20,10 +22,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   @override
+  void dispose() {
+    widget.viewModel.removeListener(_onSignOutResults);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator())  // Покажемо завантаження
+          ? const Center(child: CircularProgressIndicator())
           : Stack(
               children: [
                 Container(
@@ -84,7 +92,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               children: [
                                 Text(
                                   widget.viewModel.studentName,
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
@@ -99,8 +109,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 const SizedBox(height: 16),
                                 Text(
                                   widget.viewModel.errorMessage ?? widget.viewModel.email,
-                                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black),
                                 ),
+                                const SizedBox(height: 32),
+                                const Text(
+                                  'Корисні посилання:',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 12),
+                                ...widget.viewModel.usefulLinks
+                                    .map((link) => CustomLink(
+                                          text: link['title']!,
+                                          url: link['url']!,
+                                        ))
+                                    .toList(),
                               ],
                             ),
                           ),
