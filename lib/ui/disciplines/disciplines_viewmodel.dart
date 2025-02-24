@@ -10,7 +10,7 @@ class DisciplinesViewModel extends ChangeNotifier {
   String errorMessage = '';
   List<Map<String, dynamic>> disciplines = [];
   List<Map<String, dynamic>> filteredDisciplines = [];
-  int selectedYear = 4; // За замовчуванням 4-й курс
+  int currentSemester = _getCurrentSemester();
 
   DisciplinesViewModel({required AuthViewModel authViewModel})
       : _firestoreService = FirestoreService(authViewModel: authViewModel);
@@ -23,11 +23,9 @@ class DisciplinesViewModel extends ChangeNotifier {
     try {
       List<Map<String, dynamic>> allDisciplines = await _firestoreService.getGrades();
 
-      // Всі дисципліни без фільтрації за оцінками
       disciplines = allDisciplines;
 
-      // Фільтрація за вибраним роком
-      filterDisciplinesByYear(selectedYear);
+      filterDisciplinesBySemester(currentSemester);
     } catch (e) {
       hasError = true;
       errorMessage = e.toString();
@@ -37,16 +35,25 @@ class DisciplinesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void filterDisciplinesByYear(int year) {
-    selectedYear = year;
-    int semesterStart = (year - 1) * 2 + 1;
-    int semesterEnd = semesterStart + 1;
-
+  void filterDisciplinesBySemester(int semester) {
     filteredDisciplines = disciplines.where((discipline) {
-      int? semester = discipline['semester'];
-      return semester != null && semester >= semesterStart && semester <= semesterEnd;
+      int? disciplineSemester = discipline['semester'];
+      return disciplineSemester != null && disciplineSemester == semester;
     }).toList();
 
     notifyListeners();
+  }
+
+  static int _getCurrentSemester() {
+    DateTime now = DateTime.now();
+    int month = now.month;
+    int year = now.year;
+
+    int course = year - 2021; // Припустимо, що навчання почалося у 2021 році
+    if (month >= 9) {
+      return course * 2 - 1; // Вересень-грудень — непарний семестр
+    } else {
+      return course * 2; // Січень-червень — парний семестр
+    }
   }
 }
