@@ -18,12 +18,15 @@ class FirestoreService {
 
     try {
       String studentEmailFormatted = email.replaceAll('.', '_').replaceAll('@', '_');
-      DocumentSnapshot<Object?> studentDoc = await _db
-          .collection('groups')
-          .doc(group)
-          .collection('students_$group')
-          .doc(studentEmailFormatted)
-          .get();
+      
+// print("Fetching Firestore document: groups/$group/students_$group/$studentEmailFormatted");
+
+DocumentSnapshot<Object?> studentDoc = await _db
+    .collection('groups')
+    .doc(group)
+    .collection('students_$group')
+    .doc(studentEmailFormatted)
+    .get();
 
       if (!studentDoc.exists) {
         print('Document not found: $studentEmailFormatted');

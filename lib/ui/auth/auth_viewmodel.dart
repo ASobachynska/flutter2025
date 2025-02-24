@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:digital_department_app/data/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _authService;
@@ -9,7 +9,7 @@ class AuthViewModel extends ChangeNotifier {
   String? _errorMessage;
   String? _group; 
   int? _course;  
-  String? _degree;  // Додано для визначення ступеня
+  String? _degree;
 
   AuthViewModel({required AuthService authService}) : _authService = authService {
     _checkLoginStatus();
@@ -20,47 +20,35 @@ class AuthViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String? get group => _group;
   int? get course => _course;
-  String? get degree => _degree;  // Гетер для ступеня (бакалавр чи магістр)
+  String? get degree => _degree;
 
- void _parseEmail(String email) {
-  final regex = RegExp(r'([a-zA-Z0-9]+)');  // Оновлений регулярний вираз для захоплення всієї групи
+  void _parseEmail(String email) {
+  final regex = RegExp(r'([a-zA-Z0-9]+)');
   final match = regex.firstMatch(email);
 
   if (match != null) {
-    _group = match.group(0)?.toUpperCase();  // Група має бути повною (наприклад, kn1b21)
+    _group = match.group(0)?.toUpperCase();
 
-    int year = int.parse(_group!.substring(_group!.length - 2));  // Витягуємо останні два цифри для року
+    // Додаємо дефіс перед 'B' або 'M', якщо його немає
+    _group = _group!.replaceAllMapped(RegExp(r'([A-Z0-9]+)(B|M)'), (m) => '${m[1]}-${m[2]}');
+
+    int year = int.parse(_group!.substring(_group!.length - 2));  
     int currentYear = DateTime.now().year % 100;
     int currentMonth = DateTime.now().month;
 
-    if (currentMonth < 9) {
-      _course = (currentYear - year);
-    } else {
-      _course = (currentYear - year) + 1;
-    }
-    
+    _course = (currentYear - year) + (currentMonth >= 9 ? 1 : 0);
 
-    // Перевіряємо наявність і "B", і "M"
-    if (_group!.contains('B') && _group!.contains('M')) {
-      _degree = 'Бакалавр';  // Якщо є і B, і M, виводимо "Бакалавр"
-    } else if (_group!.contains('B')) {
-      _degree = 'Бакалавр';
-    } else if (_group!.contains('M')) {
-      _degree = 'Магістр';
-    } else {
-      _degree = 'Невідомо';  // Якщо не визначено
-    }
+    _degree = _group!.contains('M') ? 'Магістр' : 'Бакалавр';
 
     notifyListeners();
   }
 }
 
-
   Future<void> _checkLoginStatus() async {
     _user = _authService.getCurrentUser();
     _isLoggedIn = _user != null;
     if (_user != null) {
-      _parseEmail(_user!.email!);  // Розбір пошти для визначення групи та ступеня
+      _parseEmail(_user!.email!);  
     }
     notifyListeners();
   }
@@ -74,7 +62,7 @@ class AuthViewModel extends ChangeNotifier {
         _errorMessage = _authService.error;
       } else if (_authService.isLoggedIn && _user != null) {
         _isLoggedIn = true;
-        _parseEmail(_user!.email!);  // Розбір пошти після логіну
+        _parseEmail(_user!.email!);  
       }
       
       notifyListeners();
@@ -90,7 +78,7 @@ class AuthViewModel extends ChangeNotifier {
     _isLoggedIn = false;
     _group = null;
     _course = null;
-    _degree = null;  // Скидаємо ступінь
+    _degree = null;
     notifyListeners();
   }
 }
